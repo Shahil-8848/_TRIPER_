@@ -1,0 +1,146 @@
+.bus_hub {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+  
+  .bushub-box {
+    display: flex;
+    width: 100%;
+    gap:20px;
+    padding:20px;
+    /* max-width: 1200px; */
+    box-sizing: border-box;
+  }
+  
+  .hub-left {
+    background-color: #ffffff;
+    width: 30%;
+    min-height: 90vh;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
+  }
+  
+  .hub-right {
+    background-color: #ffffff;
+    width: 70%;
+    min-height: 90vh;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .hub-right-box {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .h-places {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #333;
+  }
+  
+  
+  .h-places h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #444;
+  }
+  
+  .hub-right-top {
+    margin-bottom: 20px;
+  }
+  
+  .hub-buses-items .bus-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    transition: transform 0.2s ease;
+  }
+  
+  .bus-card:hover {
+    transform: translateY(-5px);
+  }
+  .bus-items{
+    /* background-color: red; */
+  }
+  .bus-heading{
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .bus-items h3 {
+    font-size: 1.75rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .arrival-time {
+    font-size: 1.7rem;
+    color: #48d510;
+    margin-bottom: 8px;
+    font-weight: 300;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .bus-items .icon {
+    font-size: 1.5rem;
+    margin-right: 5px;
+  }
+  
+  .view-seats-btn {
+    background-color: #1e2022;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .view-seats-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .seats-container {
+    margin-top: 15px;
+  }
+  
+  .seats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .seat {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .seat.available {
+    background-color: #28a745;
+  }
+  
+  .seat.unavailable {
+    background-color: #dc3545;
+  }
+  

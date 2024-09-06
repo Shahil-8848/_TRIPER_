@@ -1,0 +1,36 @@
+/* src/index.css */
+:root {
+  --background-color: #fff;
+  --text-color: #000;
+  --primary-color: #007bff;
+  --secondary-color: #0056b3;
+}
+
+body.light-mode {
+  --background-color: #fff;
+  --text-color: #000;
+}
+
+body.dark-mode {
+  --background-color: #121212;
+  --text-color: #fff;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+button {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-radius: 5px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* button:hover {
+  background-color: var(--secondary-color);
+} */

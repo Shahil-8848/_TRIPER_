@@ -1,0 +1,103 @@
+.flow-main{
+    max-width:100%;
+    /* padding:30px; */
+    padding-left: 100px;
+    padding-right: 100px;
+    height:20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.flow-box{
+    /* width: 40%; */
+    display: flex;
+    padding:30px;
+    align-items: center;
+    justify-content: center;
+    gap:40px;
+    background-color: rgb(255, 255,225, 0.2);
+    backdrop-filter: blur(6px);
+    /* -webkit-backdrop-filter: blur(10px); */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Light border */
+    border-radius: 50px;
+}
+
+/* Location css */
+.fl-location{
+    display: flex;
+    align-items: center;
+}
+.l-cnt{
+    display:flex;
+    align-items: center;
+    gap:5px;
+}
+.l-cnt span{
+    font-size: 2rem;
+    color:blue;
+}
+.fl-location select{
+    padding:5px;
+    border-radius: 12px;
+    border:none;
+    color:rgb(8, 8, 8);
+    background:  rgb(243, 255, 240);
+}
+
+
+/* Destination Css */
+
+.fl-destination{
+    display: flex;
+    align-items: center;
+}
+.d-cnt{
+    display: flex;
+    align-items: center;
+    gap:5px;
+}
+.d-cnt span{
+    font-size: 2rem;
+    font-weight: 500;
+    color:#0072eb
+}
+
+
+/* Date css */
+
+/*Button css */
+
+/* .fl-button{
+    
+} */
+.fl-button button{
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    background-color:#0072eb;
+    border: none;
+    border-radius: 20px; /* Rounded edges */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+.fl-destination select{
+    padding:5px;
+    border-radius: 12px;
+    border:none;
+    color:rgb(8, 8, 8);
+    background: rgb(243, 255, 240);
+}
+.fl-date input{
+    padding:5px;
+    border-radius: 12px;
+    border:none;
+    color:rgb(8, 8, 8);
+    background: rgb(243, 255, 240);
+}
