@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const connectToDatabase = require("../../utils/db");
-
+const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/9203/9203764.png";
 const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -25,8 +25,8 @@ const register = async (req, res) => {
 
     // Store the user in the database
     await connection.execute(
-      "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
-      [username, email, hashedPassword]
+      "INSERT INTO users (username, email, password,avatar_url) VALUES (?, ?, ?,?)",
+      [username, email, hashedPassword, defaultAvatar]
     );
 
     res.status(201).json({ message: "User registered successfully" });

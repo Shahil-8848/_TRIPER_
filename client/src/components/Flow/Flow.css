@@ -3,6 +3,7 @@
     /* padding:30px; */
     padding-left: 100px;
     padding-right: 100px;
+    padding-bottom: 50px;
     height:20px;
     display: flex;
     align-items: center;
@@ -16,9 +17,11 @@
     justify-content: center;
     gap:40px;
     background-color: rgb(255, 255,225, 0.2);
-    backdrop-filter: blur(6px);
+    /* backdrop-filter: blur(6px); */
+    backdrop-filter: blur(7px);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.45);
     /* -webkit-backdrop-filter: blur(10px); */
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    /* box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); Subtle shadow for depth */
     border: 1px solid rgba(255, 255, 255, 0.3); /* Light border */
     border-radius: 50px;
 }
@@ -35,7 +38,7 @@
 }
 .l-cnt span{
     font-size: 2rem;
-    color:blue;
+    color:#208cff
 }
 .fl-location select{
     padding:5px;
@@ -60,7 +63,7 @@
 .d-cnt span{
     font-size: 2rem;
     font-weight: 500;
-    color:#0072eb
+    color:#208cff
 }
 
 
@@ -73,7 +76,7 @@
 } */
 .fl-button button{
     display: inline-block;
-    padding: 10px 20px;
+    /* padding: 10px 20px; */
     font-size: 16px;
     font-weight: 600;
     text-align: center;
@@ -85,6 +88,12 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease, transform 0.2s ease;
     cursor: pointer;
+}
+.fl-button button span{
+    font-size: 1.6rem;
+    align-items: center;
+    justify-self: start;
+
 }
 
 .fl-destination select{

@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
-import './Login.css';
+import React, { useState, useEffect } from "react";
+import "./Login.css";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../Context/AuthContext"; // Import AuthContext
 
 const LoginSignup: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { login, signup } = useAuth(); // Access login and signup functions from AuthContext
+  const navigate = useNavigate();
 
   const handleToggle = () => {
     setIsLogin(!isLogin);
@@ -17,52 +22,40 @@ const LoginSignup: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const url = isLogin
-        ? 'http://localhost:3000/api/auth/login'
-        : 'http://localhost:3000/api/auth/register';
-      const body = isLogin ? { email, password } : { username, email, password };
-
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
-
-      const data = await response.json();
-
-      if (response.status === 400) {
-        alert("The email is already taken, please use a different one.");
-        console.log('This is a 400 status code error');
-        return;
-      }
-
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(errorMessage || 'Network response was not ok');
-      }
-
       if (isLogin) {
-        localStorage.setItem('token', data.token);
-        alert('Login successful');
-        console.log(data);
+        // Log in the user
+        const loggedInUser = await login(email, password);
+        if (loggedInUser) {
+          // Redirect to the home page on successful login
+          navigate("/");
+        }
       } else {
-        alert('Signup successful');
-        setIsLogin(true);
+        // Sign up the user
+        await signup(username, email, password);
+        setIsLogin(true); // Switch to login form after successful signup
       }
     } catch (error: any) {
-      console.error('Error occurred during submission:', error);
+      console.error("Error occurred during submission:", error);
       alert(`An error occurred: ${error.message}`);
     } finally {
       setIsLoading(false);
+      setEmail("");
+      setPassword("");
+      setUsername("");
     }
   };
+
+  useEffect(() => {
+    // Clear all input fields on component mount
+    setEmail("");
+    setPassword("");
+    setUsername("");
+  }, []);
 
   return (
     <div className="login-signup-container">
       <div className="login-signup-card">
-        <h2 className="title">{isLogin ? 'Login' : 'Signup'}</h2>
+        <h2 className="title">{isLogin ? "Login" : "Signup"}</h2>
         <form onSubmit={handleSubmit}>
           {!isLogin && (
             <div className="form-group">
@@ -75,6 +68,7 @@ const LoginSignup: React.FC = () => {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                autoComplete="off"
               />
             </div>
           )}
@@ -88,6 +82,7 @@ const LoginSignup: React.FC = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="off"
             />
           </div>
           <div className="form-group">
@@ -104,15 +99,13 @@ const LoginSignup: React.FC = () => {
           </div>
 
           <button
-            className={`custom-button ${isLoading ? 'loading' : ''}`}
+            className={`custom-button ${isLoading ? "loading" : ""}`}
             type="submit"
             disabled={isLoading}
           >
-            <span>{isLoading ? 'Loading...' : isLogin ? 'Login' : 'Signup'}</span>
-            <div className="tooltip">
-              <div className="tooltip-text">This is a tooltip.</div>
-              <div className="tooltip-arrow"></div>
-            </div>
+            <span>
+              {isLoading ? "Loading..." : isLogin ? "Login" : "Signup"}
+            </span>
           </button>
 
           <button
@@ -120,7 +113,7 @@ const LoginSignup: React.FC = () => {
             type="button"
             onClick={handleToggle}
           >
-            {isLogin ? 'Create an account' : 'Already have an account?'}
+            {isLogin ? "Create an account" : "Already have an account?"}
           </button>
         </form>
       </div>

@@ -9,7 +9,7 @@ async function connectToDatabase() {
         host: "localhost",
         user: "root",
         password: "123456",
-        database: "busticketreservation",
+        database: "triper",
       });
       console.log("Connected to MySQL");
     }

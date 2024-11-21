@@ -1,76 +1,173 @@
-.nav-main{
+/* Navbar container */
+.nav-main {
     width: 100%;
-    height: 10vh;
-  
-   
+    height: 9vh;
+    /* background-color: #f8f9fa; */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
 }
-.nav-box{
+
+.nav-box {
+    width: 100%;
+    /* max-width: 1200px; */
+    gap:600px;
     height: 100%;
-    padding-right:40px;
-    padding-left:40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 40px;
 }
-.nav-right{
- display: flex;
- align-items: center;
- justify-content: center;
- gap:40px;
-}
-.nav-links{
-    gap:40px;
+
+.nav-right {
     display: flex;
     align-items: center;
-    /* justify-content: space-evenly; */
+    gap: 40px;
 }
-.nav-links h4{
+
+.logo_main h1 {
+    font-size: 1.8rem;
+   list-style: none;
+   text-underline-offset: none;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-links h4 {
     font-size: 1.2rem;
-    font-weight: 400;
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+    text-decoration: none;
+   
+    transition: color 0.3s;
 }
 
+.nav-links h4:hover {
+    color: #1e1f20;
+}
 
+/* Left-side elements */
 .nav-left {
-display: flex;
+    display: flex;
+    align-items: center;
+ 
+    gap: 20px;
 }
-.sign-in button{
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: center;
-    text-decoration: none;
-    color: #fff;
-    background-color: #272f37;
-    border: none;
-    border-radius: 12px; /* Rounded edges */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    cursor: pointer;
-}
-.sign-up button{
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: center;
-    text-decoration: none;
-    color: #fff;
-    background-color: #667381;
-    border: none;
-    border-radius: 12px; /* Rounded edges */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    cursor: pointer;
-}
-.theme{
 
-    background-color: rgb(0, 0, 0);
+.sign-in button {
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #007bff;
     border: none;
-    color:rgb(255, 255, 255);
-    border-radius: 50px;
-}.theme-box{
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.sign-in button:hover {
+    background-color: #0056b3;
+}
+
+.theme-box {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.theme.dark{
+   background: #000000;
+    border: none;
+    color: #ffffff;
+    border-radius: 50px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.theme.day{
+    background-color: rgb(255, 255, 255);
+    color:black;
+}
+.theme:hover {
+    /* background-color: #f1f1f1; */
+}
+
+/* User profile and dropdown */
+.user_bar {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.user_bar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.user_dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+    min-width: 200px;
+    z-index: 1000;
+}
+
+.user_dropdown p {
+    font-size: 14px;
+    padding: 10px;
+    color: #333;
+    cursor: pointer;
+    margin: 0;
+    transition: background-color 0.2s;
+}
+
+.user_dropdown p:hover {
+    background-color: #f1f1f1;
+}
+
+/* Hover on the user_bar OR user_dropdown */
+.user_bar:hover .user_dropdown,
+.user_dropdown:hover {
+    display: block;
+    opacity: 1; /* Show dropdown */
+    visibility: visible;
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-box {
+        padding: 0 20px;
+    }
+
+    .nav-right {
+        gap: 20px;
+    }
+
+    .nav-links h4 {
+        font-size: 1rem;
+    }
+
+    .sign-in button {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .user_dropdown {
+        left: -20px;
+        width: 180px;
+    }
 }

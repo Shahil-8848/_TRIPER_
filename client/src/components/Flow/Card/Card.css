@@ -1,99 +1,120 @@
-.card-cnt{
-    /* background-color: rgb(105, 105, 105); */
-    max-width: 100%;
-    height: 35vh;
-    padding-top: 30px;
-    padding-left: 10px;
-    padding-right: 10px;
+.popular-destinations-container {
+  max-width: 1300px; /* Increased from 1200px */
+  margin: 0 auto;
+  padding: 0 20px;
+  height: auto;
 }
 
-.card-box{
-    padding-top:15px;
-    /* background-color: silver;
-    align-items: center; */
+.popular-destinations-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
 }
-.card-grid{
-    width:100%;
-    display: flex;
-    align-items: center;
-    padding-top:10px;
-    padding-bottom:10px;
-    justify-content: center;
-    gap:20px;
-    flex:wrap;
-    grid-template-columns:;
-    /* background-color: rgb(192, 192, 192); */
-}
-.card1{
-    /* background-color: rgb(60, 59, 59); */
-    border-radius: 10px;
-}
-.card2{
-    display: flex;
-    width:30%;
-    /* background-color: black; */
-    flex-direction: column;
-    /* align-items: center; */
-}
-.card2-box{
-    width:100%;
-}
-.card2-box .card2_1{
+
+.destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px; /* Increased from 15px to allow for wider cards */
+  height: 350px; /* Increased from 320px to maintain aspect ratio */
+  justify-content: center;
   
-    padding:90px;
-    margin-bottom: 10px;
-    border-radius: 15px;
-    /* background-color: rgb(83, 83, 83); */
 }
-.card2-box .card2_2{
-    padding:30px;
-    border-radius:15px;
-    background-color: rgb(102, 101, 101);
-    
-}
-
-
-.card3{
-    background-color: rgb(97, 97, 97);
-    padding:140px;
-    border-radius: 15px;
-}
-.card4{
-    width:30%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.card4-box{
-width:100%;
-
-}
-.card4_1{
-    padding:90px;
-    margin-bottom: 10px;
-    border-radius: 15px;
-    background-color: rgb(83, 83, 83);
+.destination-card {
+  position: relative;
+  background-color: #e0e0e0;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.card4_2{
-    padding:30px;
-    margin-bottom: 10px;
-    border-radius: 15px;
-    background-color: rgb(70, 66, 70);
+.destination-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4); /* Dimming effect */
+  z-index: 1; /* Positioned below the text */
+  transition: background 0.3s ease;
 }
 
+.destination-card:hover::before {
+  background: rgba(0, 0, 0, 0.2); /* Lessen dimming on hover */
+}
 
+.destination-name {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #333;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 2; /* Ensures the text is above the dimming overlay */
+  transition: background-color 0.3s ease;
+}
 
+.destination-card:hover .destination-name {
+  background-color: rgb(197, 197, 197);
+}
+.destination-card:hover .destination-name {
+  background-color: rgb(213, 213, 213);
+}
 
-.card {
-    /* background-color: rgb(60, 59, 59); */
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
+.large-card {
+  grid-row: span 2;
+}
+.small-card {
+  grid-column: span 2; /* Increased from span 1 to span 2 to make them wider */
+  height: auto;
+}
+.spain {
+  grid-column: span 1; /* Increased from span 1 to span 2 */
+}
+
+.london {
+  grid-column: span 1;
+  width: 100%; /* Changed from fixed width to 100% */
+}
+
+.croatia {
+  grid-column: span 1;
+}
+
+.lisbon {
+  grid-column: span 1;
+}
+
+.bratislava {
+  grid-column: span 1;
+  width: 100%; /* Changed from fixed width to 100% */
+}
+
+.copenhagen {
+  grid-column: span 1;
+  width: 100%; /* Changed from fixed width to 100% */
+}
+
+@media (max-width: 768px) {
+  .destinations-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    height: auto;
   }
-  
-  .card:hover {
-    transform: scale(1.05);
+
+  .large-card, .small-card {
+    grid-column: span 1;
+    grid-row: span 1;
+    height: 200px;
   }
-  
+
+  .spain {
+    grid-column: span 2;
+  }
+}

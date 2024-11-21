@@ -1,0 +1,354 @@
+//card layout simple
+import React from "react";
+import "./Card.css";
+import { useNavigate } from "react-router-dom";
+
+interface DestinationCard {
+  id: number;
+  name: string;
+  image: string;
+}
+
+const destinations: DestinationCard[] = [
+  {
+    id: 1,
+    name: "Paris",
+    image:
+      "https://s1.1zoom.me/b5050/550/USA_Island_Skyscrapers_island_Freedom_Upper_new_593961_1920x1080.jpg",
+  },
+  {
+    id: 2,
+    name: "New York",
+    image:
+      "https://www.banburyguardian.co.uk/jpim-static/image/2023/05/16/12/AdobeStock_306619275_Editorial_Use_Only.jpeg?crop=3:2,smart&trim=&width=1200&auto=webp&quality=75",
+  },
+  {
+    id: 3,
+    name: "Tokyo",
+    image:
+      "https://s1.1zoom.me/b5050/550/USA_Island_Skyscrapers_island_Freedom_Upper_new_593961_1920x1080.jpg",
+  },
+  {
+    id: 4,
+    name: "London",
+    image:
+      "https://s1.1zoom.me/b5050/550/USA_Island_Skyscrapers_island_Freedom_Upper_new_593961_1920x1080.jpg",
+  },
+  {
+    id: 5,
+    name: "Rome",
+    image:
+      "https://s1.1zoom.me/b5050/550/USA_Island_Skyscrapers_island_Freedom_Upper_new_593961_1920x1080.jpg",
+  },
+  {
+    id: 6,
+    name: "Sydney",
+    image:
+      "https://s1.1zoom.me/b5050/550/USA_Island_Skyscrapers_island_Freedom_Upper_new_593961_1920x1080.jpg",
+  },
+];
+
+const Card: React.FC = () => {
+  const navigate = useNavigate();
+  const handleCardClick = (name: string) => {
+    // TODO: Implement navigation to places section
+    navigate(`/places/${name}`);
+    console.log(`Navigating to place with id: ${name}`);
+  };
+
+  return (
+    <div className="card-cnt">
+      {/* <h2 className="section-title">Popular Destinations</h2> */}
+      <h4> Travel also for </h4>
+      <div className="card-grid">
+        {destinations.map((dest) => (
+          <div
+            key={dest.id}
+            className="card-item"
+            style={{ backgroundImage: `url('${dest.image}')` }}
+            onClick={() => handleCardClick(dest.name)}
+          >
+            <div className="card-content">
+              <h3>{dest.name}</h3>
+              <button className="explore-btn">Explore</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Card;
+
+import React from "react";
+import "./Card.css";
+import { useNavigate } from "react-router-dom";
+
+interface DestinationCard {
+  id: number;
+  name: string;
+  image: string;
+}
+
+const destinations: DestinationCard[] = [
+  {
+    id: 1,
+    name: "Paris",
+    image:
+      "https://s1.1zoom.me/b5050/550/USA_Island_Skyscrapers_island_Freedom_Upper_new_593961_1920x1080.jpg",
+  },
+  {
+    id: 2,
+    name: "New York",
+    image:
+      "https://www.banburyguardian.co.uk/jpim-static/image/2023/05/16/12/AdobeStock_306619275_Editorial_Use_Only.jpeg?crop=3:2,smart&trim=&width=1200&auto=webp&quality=75",
+  },
+  {
+    id: 3,
+    name: "Tokyo",
+    image:
+      "https://s1.1zoom.me/b5050/550/USA_Island_Skyscrapers_island_Freedom_Upper_new_593961_1920x1080.jpg",
+  },
+  {
+    id: 4,
+    name: "London",
+    image:
+      "https://s1.1zoom.me/b5050/550/USA_Island_Skyscrapers_island_Freedom_Upper_new_593961_1920x1080.jpg",
+  },
+  {
+    id: 5,
+    name: "Rome",
+    image:
+      "https://s1.1zoom.me/b5050/550/USA_Island_Skyscrapers_island_Freedom_Upper_new_593961_1920x1080.jpg",
+  },
+  {
+    id: 6,
+    name: "Sydney",
+    image:
+      "https://s1.1zoom.me/b5050/550/USA_Island_Skyscrapers_island_Freedom_Upper_new_593961_1920x1080.jpg",
+  },
+];
+
+const Card: React.FC = () => {
+  const navigate = useNavigate();
+  const handleCardClick = (name: string) => {
+    // TODO: Implement navigation to places section
+    navigate(`/places/${name}`);
+    console.log(`Navigating to place with id: ${name}`);
+  };
+
+  return (
+    <div className="card-cnt">
+      {/* <h2 className="section-title">Popular Destinations</h2> */}
+      <h4> Travel also for </h4>
+      <div className="card-grid">
+        {destinations.map((dest) => (
+          <div
+            key={dest.id}
+            className="card-item"
+            style={{ backgroundImage: `url('${dest.image}')` }}
+            onClick={() => handleCardClick(dest.name)}
+          >
+            <div className="card-content">
+              <h3>{dest.name}</h3>
+              <button className="explore-btn">Explore</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Card;
+
+
+
+
+.card-cnt {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.card-item {
+    height: 350px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.card-item:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+}
+
+.card-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%);
+    z-index: 1;
+    transition: opacity 0.4s ease;
+}
+
+.card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    color: white;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    text-align: center;
+}
+
+.card-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.card-item:hover .card-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.explore-btn {
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.explore-btn:hover {
+    background-color: #ff6b81;
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-item {
+        height: 250px;
+    }
+
+    .card-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .explore-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+.popular-destinations {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: repeat(2, 200px); /* Two rows of 200px each */
+    grid-gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .destination-card {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+  }
+  
+  .destination-label {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  }
+  
+  /* Grid areas */
+  .spanish-card {
+    grid-column: 1 / span 2; /* Takes 2 columns */
+    grid-row: 1 / span 2; /* Takes 2 rows */
+  }
+  
+  .london-card {
+    grid-column: 3; /* Third column */
+    grid-row: 1; /* First row */
+  }
+  
+  .lisbon-card {
+    grid-column: 2; /* Second column */
+    grid-row: 2; /* Second row */
+  }
+  
+  .bratislava-card {
+    grid-column: 3; /* Third column */
+    grid-row: 2; /* Second row */
+  }
+  
+  .croatia-card {
+    grid-column: 2; /* Second column */
+    grid-row: 1; /* First row */
+  }
+  
+  .copenhagen-card {
+    grid-column: 3; /* Third column */
+    grid-row: 2; /* Second row */
+  }
+  
+  @media (max-width: 768px) {
+    .popular-destinations {
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(6, 150px);
+    }
+  
+    .destination-card {
+      height: 150px;
+    }
+  }
+  
