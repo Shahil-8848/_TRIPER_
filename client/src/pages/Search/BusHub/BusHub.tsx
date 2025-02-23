@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./BusHub.css";
 import { ImArrowRight2 } from "react-icons/im";
 import { IoWifi } from "react-icons/io5";
@@ -109,7 +109,6 @@ const BusHub: React.FC = () => {
   // Filter logic for buses
   const applyFilters = () => {
     let filtered = [...busData];
-
     // Apply price filter
     filtered = filtered.filter(
       (bus) =>
@@ -203,7 +202,10 @@ const BusHub: React.FC = () => {
   //     applyFilters();
   //   }
   // }, [filters, busData]);
-
+  const navigate = useNavigate();
+  const handleContinue = () => {
+    navigate("/form");
+  };
   return (
     <div className="bus_hub">
       <div className="bushub-box">
@@ -386,6 +388,7 @@ const BusHub: React.FC = () => {
                               </div>
                             ))}
                           </div>
+                          <button onClick={handleContinue}>continue</button>
                         </div>
                       )}
                     </div>

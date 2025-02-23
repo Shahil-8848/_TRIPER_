@@ -1,19 +1,20 @@
-// import React from 'react'
+// src/main.tsx or index.tsx
+import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
-import { Auth0Provider } from "@auth0/auth0-react";
+import App from "./App";
+import { ClerkProvider } from "@clerk/clerk-react";
+
+// Import your publishable key from .env
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key");
+}
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <>
-    <Auth0Provider
-      domain="dev-n5pc0snwkkz5hylw.us.auth0.com"
-      clientId="tNrUrSAkwOIEA5lZf35AKf4YYGPLThf1"
-      authorizationParams={{
-        redirect_uri: window.location.origin,
-      }}
-    >
+  <React.StrictMode>
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
       <App />
-    </Auth0Provider>
-    ,
-  </>
+    </ClerkProvider>
+  </React.StrictMode>
 );

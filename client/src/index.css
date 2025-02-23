@@ -1,36 +1,28 @@
-/* src/index.css */
-:root {
-  --background-color: #fff;
-  --text-color: #000;
-  --primary-color: #007bff;
-  --secondary-color: #0056b3;
-}
-
+/* Light Mode */
 body.light-mode {
-  --background-color: #fff;
-  --text-color: #000;
+  background-color: #f5f5f5;
+  color: #333;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Dark Mode */
 body.dark-mode {
-  --background-color: #121212;
-  --text-color: #fff;
+  background-color: #121212;
+  color: #f5f5f5;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-body {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
+/* Navbar theme adjustments */
+.nav-main {
+  background-color: inherit;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-button {
-  background-color: var(--primary-color);
-  color: #fff;
-  border-radius: 5px;
-  padding: 8px 16px;
-  border: none;
-  cursor: pointer;
+.dark-mode .nav-main {
+  background-color: #1e1e1e;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
-/* button:hover {
-  background-color: var(--secondary-color);
-} */
+.light-mode .nav-main {
+  background-color: #ffffff;
+}

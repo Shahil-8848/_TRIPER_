@@ -102,18 +102,27 @@
 }
 
 /* User profile and dropdown */
+/* User profile and dropdown */
 .user_bar {
     position: relative;
     display: inline-block;
     cursor: pointer;
-}
-
-.user_bar img {
-    width: 50px;
+  }
+  
+  .user_bar img {
+    width: 50px; /* Adjust size as needed */
     height: 50px;
-    border-radius: 50%;
-}
-
+    object-fit: cover; /* Ensures the image fits within the container without distortion */
+    border-radius: 50%; /* Circular image */
+    border: 2px solid #ddd; /* Optional: Add a light border for better visibility */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Subtle shadow for a professional look */
+    transition: transform 0.3s ease-in-out; /* Smooth hover effect */
+  }
+  
+  .user_bar img:hover {
+    transform: scale(1.1); /* Slight zoom effect on hover */
+  }
+  
 .user_dropdown {
     position: absolute;
     top: 100%;
