@@ -52,6 +52,7 @@ const Form: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
+      alert("Bus Reserved successfully");
       console.log("Form submitted:", formData);
     } else {
       console.log("Form has errors");
