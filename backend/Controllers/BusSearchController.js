@@ -62,6 +62,7 @@ const GetBuses = async (req, res) => {
     console.error("Error fetching buses:", error);
     res.status(500).send("Server Error");
   }
+  6;
 };
 
 module.exports = { GetBuses };
