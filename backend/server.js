@@ -2,7 +2,8 @@ const express = require("express");
 const dotenv = require("dotenv");
 const userRoutes = require("./Routes/UserRoutes");
 const searchRoutes = require("./Routes/SearchRoutes");
-
+const reserveRoutes = require("./Routes/ReserveRoutes");
+const passengerRoutes = require("./Routes/PassengerRoutes");
 dotenv.config();
 
 const app = express();
@@ -15,7 +16,8 @@ app.use(express.json());
 // Use user routes
 app.use("/api/auth", userRoutes);
 app.use("/routes", searchRoutes);
-
+app.use("/api", reserveRoutes);
+app.use("/api", passengerRoutes);
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

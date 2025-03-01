@@ -1,0 +1,117 @@
+.booking-container {
+    min-height: 100vh;
+    padding: 40px;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e1e8ed 100%);
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .booking-title {
+    font-size: 2.5rem;
+    color: #1a2b49;
+    margin-bottom: 30px;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  .booking-table-container {
+    width: 100%;
+    max-width: 1400px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+  }
+  
+  .booking-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .booking-table th,
+  .booking-table td {
+    padding: 15px 20px;
+    text-align: left;
+    font-size: 0.95rem;
+    color: #34495e;
+  }
+  
+  .booking-table th {
+    background: #1a2b49;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .booking-table tr {
+    border-bottom: 1px solid #e9ecef;
+    transition: background 0.3s ease;
+  }
+  
+  .booking-table tr:hover {
+    background: #f8f9fa;
+  }
+  
+  .booking-table td {
+    vertical-align: middle;
+  }
+  
+  .no-data {
+    font-size: 1.2rem;
+    color: #6c757d;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .loader-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e1e8ed 100%);
+  }
+  
+  .loader {
+    font-size: 1.5rem;
+    color: #1a2b49;
+    font-weight: 500;
+  }
+  
+  .error-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e1e8ed 100%);
+  }
+  
+  .error-container h2 {
+    font-size: 2rem;
+    color: #e63946;
+    margin-bottom: 10px;
+  }
+  
+  .error-container p {
+    font-size: 1.2rem;
+    color: #34495e;
+  }
+  
+  @media (max-width: 768px) {
+    .booking-container {
+      padding: 20px;
+    }
+  
+    .booking-title {
+      font-size: 2rem;
+    }
+  
+    .booking-table th,
+    .booking-table td {
+      padding: 10px;
+      font-size: 0.85rem;
+    }
+  }

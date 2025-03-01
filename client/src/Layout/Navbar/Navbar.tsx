@@ -14,7 +14,7 @@ const Navbar: React.FC = () => {
       <div className="nav-box">
         <div className="nav-right">
           <div className="logo_main">
-            <h1>MoClet</h1>
+            <h1>Triper</h1>
           </div>
           <div className="nav-links">
             <NavLink to="/">
@@ -23,9 +23,14 @@ const Navbar: React.FC = () => {
             <NavLink to="/bookings">
               <h4>Bookings</h4>
             </NavLink>
-            <NavLink to="/places">
-              <h4>Places</h4>
-            </NavLink>
+
+            <h4
+              onClick={() => {
+                alert("comming soon");
+              }}
+            >
+              Places
+            </h4>
           </div>
         </div>
 

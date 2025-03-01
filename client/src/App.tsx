@@ -11,6 +11,7 @@ import UserDashboard from "./pages/UserInfo/UserDashboard/UserDashboard";
 import UserProfile from "./pages/UserInfo/UserProfile/UserProfile";
 import Form from "./pages/Form/Form";
 import { ProtectedRoute, SignInPage } from "./pages/Auth/Login/Login";
+import Booking from "./pages/Booking/Booking";
 
 const App: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const App: React.FC = () => {
               <Route path="/search" element={<BusHub />} />
               <Route path="/places/:id" element={<Places />} />
               <Route path="/form" element={<Form />} />
+              <Route path="/bookings" element={<Booking />} />
             </Route>
             <Route path="/sign-in" element={<SignInPage />} />
             <Route

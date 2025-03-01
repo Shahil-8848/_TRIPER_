@@ -2,31 +2,32 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./BusHub.css";
 import { ImArrowRight2 } from "react-icons/im";
-import { IoWifi } from "react-icons/io5";
-import { FiSun } from "react-icons/fi";
-import { MdFastfood } from "react-icons/md";
 import { FaWifi } from "react-icons/fa";
 import { FaBed } from "react-icons/fa";
 import { FaBowlFood } from "react-icons/fa6";
+import { FiSun } from "react-icons/fi";
+import { useBusContext } from "../../../Context/BusContext";
 
-// BusData interface
+interface Seat {
+  seatNumber: number;
+  isAvailable: boolean;
+}
+
 interface BusData {
   ride_id: number;
   shift: string;
-  seats: { seat_id: number; seat_number: number; is_available: boolean }[];
-  bus_features: {
-    AC?: boolean;
-    WiFi?: boolean;
-    RecliningSeats?: boolean;
-    [key: string]: boolean | undefined;
-  };
+  seats: Seat[];
+  bus_features: { [key: string]: boolean | undefined };
   ride_time: string;
   price: number;
+  from_location: string;
+  to_location: string;
+  bus_id: number;
+  total_seats: number;
   bus_name: string;
-  bus_number: string;
+  bus_type?: string;
 }
 
-// Filter interface
 interface Filters {
   priceRange: [number, number];
   departureTime: string[];
@@ -36,6 +37,8 @@ interface Filters {
 
 const BusHub: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { setBusDetails } = useBusContext();
   const [fromDestination, setFromDest] = useState<string | null>(null);
   const [toDestination, setToDestination] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -44,6 +47,9 @@ const BusHub: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showSeats, setShowSeats] = useState<number | null>(null);
+  const [selectedSeats, setSelectedSeats] = useState<
+    Record<number, Set<number>>
+  >({});
   const [filters, setFilters] = useState<Filters>({
     priceRange: [0, 5000],
     departureTime: [],
@@ -53,22 +59,15 @@ const BusHub: React.FC = () => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    const from = searchParams.get("from");
-    const to = searchParams.get("to");
-    const date = searchParams.get("date");
-
-    setFromDest(from);
-    setToDestination(to);
-    setSelectedDate(date);
+    setFromDest(searchParams.get("from"));
+    setToDestination(searchParams.get("to"));
+    setSelectedDate(searchParams.get("date"));
   }, [location.search]);
 
   useEffect(() => {
-    if (fromDestination && toDestination) {
-      fetchBuses();
-    }
+    if (fromDestination && toDestination) fetchBuses();
   }, [fromDestination, toDestination]);
 
-  // Fetch buses based on fromDestination and toDestination
   const fetchBuses = async () => {
     try {
       setLoading(true);
@@ -77,22 +76,11 @@ const BusHub: React.FC = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fromDestination, toDestination }),
       });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      const formattedData = data.map((bus: BusData) => ({
-        ...bus,
-        bus_features:
-          typeof bus.bus_features === "string"
-            ? JSON.parse(bus.bus_features)
-            : bus.bus_features,
-        price: parseFloat(bus.price.toString()),
-      }));
-      setBusData(formattedData);
-      setFilteredBusData(formattedData);
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+      const data: BusData[] = await response.json();
+      console.log("Fetched bus data:", data);
+      setBusData(data);
+      setFilteredBusData(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
@@ -100,88 +88,128 @@ const BusHub: React.FC = () => {
     }
   };
 
-  // Toggle seat display for the selected bus
   const handleViewSeats = (rideId: number) => {
     setShowSeats(showSeats === rideId ? null : rideId);
-    console.log(rideId);
+    if (showSeats !== rideId) {
+      setSelectedSeats((prev) => ({ ...prev, [rideId]: new Set() }));
+    }
   };
 
-  // Filter logic for buses
+  const handleSeatClick = (rideId: number, seat: Seat) => {
+    if (!seat.isAvailable) return;
+    setSelectedSeats((prev) => {
+      const currentSeats = prev[rideId] || new Set();
+      const newSeats = new Set(currentSeats);
+      newSeats.has(seat.seatNumber)
+        ? newSeats.delete(seat.seatNumber)
+        : newSeats.add(seat.seatNumber);
+      return { ...prev, [rideId]: newSeats };
+    });
+  };
+
+  const handleContinue = (rideId: number, bus: BusData) => {
+    const selectedSeatNumbers = Array.from(selectedSeats[rideId] || []);
+    if (selectedSeatNumbers.length === 0) {
+      alert("Please select at least one seat");
+      return;
+    }
+
+    const selectedSeatsData = bus.seats.filter((seat) =>
+      selectedSeatNumbers.includes(seat.seatNumber)
+    );
+
+    // Format rideTime to HH:MM:SS
+    const formatTime = (timeInput: string): string => {
+      console.log("BusHub formatting rideTime:", timeInput);
+      if (!timeInput || typeof timeInput !== "string") return "00:00:00";
+      const date = new Date(timeInput);
+      if (isNaN(date.getTime())) {
+        console.warn("Invalid rideTime in BusHub:", timeInput);
+        return "00:00:00";
+      }
+      return date.toTimeString().split(" ")[0];
+    };
+
+    const busDetailsData = {
+      selectedBus: selectedSeatsData,
+      seatPrice: selectedSeatNumbers.length * bus.price,
+      routeFrom: fromDestination,
+      routeTo: toDestination,
+      travelDate: selectedDate,
+      rideTime: formatTime(bus.ride_time),
+      rideID: rideId,
+      busType: Object.keys(bus.bus_features)
+        .filter((key) => bus.bus_features[key])
+        .join(", "),
+      shift: bus.shift,
+      busName: bus.bus_name,
+      selectedSeatNumbers,
+    };
+
+    console.log("Setting busDetails:", busDetailsData);
+    setBusDetails(busDetailsData);
+    navigate("/form", { state: busDetailsData });
+  };
+
   const applyFilters = () => {
     let filtered = [...busData];
-    // Apply price filter
     filtered = filtered.filter(
       (bus) =>
         bus.price >= filters.priceRange[0] && bus.price <= filters.priceRange[1]
     );
-
-    // Apply departure time filter
     if (filters.departureTime.length > 0) {
-      filtered = filtered.filter((bus) => {
-        const rideTime = new Date(bus.ride_time);
-        const hour = rideTime.getHours();
-        return filters.departureTime.some((time) => {
-          if (time === "Morning" && hour >= 5 && hour < 12) return true;
-          if (time === "Afternoon" && hour >= 12 && hour < 17) return true;
-          if (time === "Evening" && hour >= 17 && hour < 21) return true;
-          if (time === "NIGHT" && hour >= 20 && hour < 5) return true;
-          return false;
-          // &&(hour >= 21 || hour < 5)
-        });
-      });
-    }
-
-    // Apply bus type filter
-    if (filters.busType.length > 0) {
-      filtered = filtered.filter((bus) => {
-        return filters.busType.some((type) => {
-          if (type === "AC" && bus.bus_features.AC) return true;
-          if (type === "Non AC" && !bus.bus_features.AC) return true;
-          if (type === "Sleeper" && bus.bus_features.RecliningSeats)
-            return true;
-          if (type === "Seater" && !bus.bus_features.RecliningSeats)
-            return true;
-          return false;
-        });
-      });
-    }
-
-    // Apply amenities filter
-    if (filters.amenities.length > 0) {
       filtered = filtered.filter((bus) =>
-        filters.amenities.every((amenity) => {
-          if (amenity === "WiFi" && bus.bus_features.WiFi) return true;
-          if (amenity === "Sleeper" && bus.bus_features.RecliningSeats)
-            return true;
-          if (amenity === "Food" && bus.bus_features.Food) return true;
-          return false;
-        })
+        filters.departureTime.includes(
+          bus.shift.charAt(0) + bus.shift.slice(1).toLowerCase()
+        )
       );
     }
-
+    if (filters.busType.length > 0) {
+      filtered = filtered.filter((bus) => {
+        const busType = bus.bus_type || (bus.bus_features.AC ? "AC" : "Non AC");
+        return filters.busType.includes(busType);
+      });
+    }
+    if (filters.amenities.length > 0) {
+      filtered = filtered.filter((bus) =>
+        filters.amenities.every((amenity) => bus.bus_features[amenity])
+      );
+    }
     setFilteredBusData(filtered);
   };
 
-  // Handle filter changes
   const handleFilterChange = (filterType: keyof Filters, value: any) => {
-    setFilters((prev) => ({
-      ...prev,
-      [filterType]: value,
-    }));
+    setFilters((prev) => ({ ...prev, [filterType]: value }));
   };
 
-  // Handle Confirm and Search button
-  const handleSearch = () => {
-    applyFilters();
-    console.log("ho ho");
-  };
-
-  // Handle price range click
-  const handlePriceClick = (price: number) => {
-    setFilters((prev) => ({
-      ...prev,
-      priceRange: [prev.priceRange[0], price],
-    }));
+  const renderBusLayout = (seats: Seat[], rideId: number) => {
+    const seatsPerRow = 4;
+    const rows = Math.ceil(seats.length / seatsPerRow);
+    return (
+      <div className="bus-layout">
+        {Array.from({ length: rows }).map((_, rowIndex) => (
+          <div key={rowIndex} className="bus-row">
+            {seats
+              .slice(rowIndex * seatsPerRow, (rowIndex + 1) * seatsPerRow)
+              .map((seat) => (
+                <div
+                  key={seat.seatNumber}
+                  className={`seat ${
+                    !seat.isAvailable
+                      ? "unavailable"
+                      : selectedSeats[rideId]?.has(seat.seatNumber)
+                        ? "selected"
+                        : "available"
+                  }`}
+                  onClick={() => handleSeatClick(rideId, seat)}
+                >
+                  {seat.seatNumber}
+                </div>
+              ))}
+          </div>
+        ))}
+      </div>
+    );
   };
 
   const renderAmenityIcon = (amenityType: string) => {
@@ -197,203 +225,217 @@ const BusHub: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (busData.length > 0) {
-  //     applyFilters();
-  //   }
-  // }, [filters, busData]);
-  const navigate = useNavigate();
-  const handleContinue = () => {
-    navigate("/form");
-  };
+  if (loading)
+    return (
+      <div className="loader-container">
+        <div className="loader"></div>
+      </div>
+    );
+  if (error)
+    return (
+      <div className="error-container">
+        <h2>Error loading buses</h2>
+        <p>{error}</p>
+        <button onClick={fetchBuses}>Try Again</button>
+      </div>
+    );
+  if (filteredBusData.length === 0)
+    return (
+      <div className="no-buses">
+        <h2>No buses found</h2>
+        <button onClick={() => setFilteredBusData(busData)}>
+          Clear Filters
+        </button>
+      </div>
+    );
+
   return (
     <div className="bus_hub">
       <div className="bushub-box">
         <div className="hub-left">
           <div className="filter-section">
-            <h3>Filters</h3>
-
-            {/* Price Range Filter */}
+            <h3>Filter Buses</h3>
             <div className="filter-group">
-              <h4>Price Range</h4>
-              <input
-                type="range"
-                min="0"
-                max="5000"
-                value={filters.priceRange[1]}
-                onChange={(e) =>
-                  handleFilterChange("priceRange", [
-                    filters.priceRange[0],
-                    parseInt(e.target.value),
-                  ])
-                }
-              />
-              <span>
-                ₹{filters.priceRange[0]} - ₹{filters.priceRange[1]}
-              </span>
-              <div className="priceOpt">
-                <ul>
-                  {[500, 1000, 1500, 3000].map((price) => (
-                    <li key={price} onClick={() => handlePriceClick(price)}>
-                      {price}
-                    </li>
-                  ))}
-                </ul>
+              <label>Price Range</label>
+              <div className="range-container">
+                <input
+                  type="range"
+                  min="0"
+                  max="5000"
+                  value={filters.priceRange[1]}
+                  onChange={(e) =>
+                    handleFilterChange("priceRange", [
+                      filters.priceRange[0],
+                      parseInt(e.target.value),
+                    ])
+                  }
+                />
+                <span>
+                  ₹{filters.priceRange[0]} - ₹{filters.priceRange[1]}
+                </span>
               </div>
             </div>
-
-            {/* Departure Time Filter */}
             <div className="filter-group">
-              <h4>Departure Time</h4>
+              <label>Departure Time</label>
               {["Morning", "Afternoon", "Evening", "Night"].map((time) => (
-                <label key={time}>
+                <div key={time} className="filter-option">
                   <input
                     type="checkbox"
                     checked={filters.departureTime.includes(time)}
-                    onChange={() => {
-                      const updatedTimes = filters.departureTime.includes(time)
-                        ? filters.departureTime.filter((t) => t !== time)
-                        : [...filters.departureTime, time];
-                      handleFilterChange("departureTime", updatedTimes);
-                    }}
+                    onChange={() =>
+                      handleFilterChange(
+                        "departureTime",
+                        filters.departureTime.includes(time)
+                          ? filters.departureTime.filter((t) => t !== time)
+                          : [...filters.departureTime, time]
+                      )
+                    }
                   />
-                  {time}
-                </label>
+                  <span>{time}</span>
+                </div>
               ))}
             </div>
-
-            {/* Bus Type Filter */}
             <div className="filter-group">
-              <h4>Bus Type</h4>
+              <label>Bus Type</label>
               {["AC", "Non AC", "Sleeper", "Seater"].map((type) => (
-                <label key={type}>
+                <div key={type} className="filter-option">
                   <input
                     type="checkbox"
                     checked={filters.busType.includes(type)}
-                    onChange={() => {
-                      const updatedTypes = filters.busType.includes(type)
-                        ? filters.busType.filter((t) => t !== type)
-                        : [...filters.busType, type];
-                      handleFilterChange("busType", updatedTypes);
-                    }}
+                    onChange={() =>
+                      handleFilterChange(
+                        "busType",
+                        filters.busType.includes(type)
+                          ? filters.busType.filter((t) => t !== type)
+                          : [...filters.busType, type]
+                      )
+                    }
                   />
-                  {type}
-                </label>
+                  <span>{type}</span>
+                </div>
               ))}
             </div>
-
-            {/* Amenities Filter */}
             <div className="filter-group">
-              <h4>Amenities</h4>
-              {["WiFi", "Sleeper", "Food"].map((amenity) => (
-                <label key={amenity}>
+              <label>Amenities</label>
+              {["WiFi", "RecliningSeats", "Food"].map((amenity) => (
+                <div key={amenity} className="filter-option">
                   <input
                     type="checkbox"
                     checked={filters.amenities.includes(amenity)}
-                    onChange={() => {
-                      const updatedAmenities = filters.amenities.includes(
-                        amenity
+                    onChange={() =>
+                      handleFilterChange(
+                        "amenities",
+                        filters.amenities.includes(amenity)
+                          ? filters.amenities.filter((a) => a !== amenity)
+                          : [...filters.amenities, amenity]
                       )
-                        ? filters.amenities.filter((a) => a !== amenity)
-                        : [...filters.amenities, amenity];
-                      handleFilterChange("amenities", updatedAmenities);
-                    }}
+                    }
                   />
-                  {renderAmenityIcon(amenity)} {amenity}
-                </label>
+                  <span>
+                    {renderAmenityIcon(amenity)}{" "}
+                    {amenity.replace(/([A-Z])/g, " $1").trim()}
+                  </span>
+                </div>
               ))}
             </div>
-
-            {/* Confirm and Search Button */}
-            <div className="filter-group">
-              <button onClick={handleSearch}>Confirm and Search</button>
-            </div>
+            <button className="apply-filter-btn" onClick={applyFilters}>
+              Apply Filters
+            </button>
           </div>
         </div>
-
         <div className="hub-right">
           <div className="hub-right-box">
             <div className="hub-right-top">
-              <div className="h-places">
-                <h4>{fromDestination}</h4>
-                <span>
-                  <ImArrowRight2 />
-                </span>
-                <h4>{toDestination}</h4>
-                <h4>{selectedDate}</h4>
+              <div className="route-info">
+                <h2>
+                  {fromDestination} <ImArrowRight2 /> {toDestination}
+                </h2>
+                <span>{selectedDate}</span>
               </div>
+              <p>{filteredBusData.length} buses found</p>
             </div>
-            <div className="hub-buses-items">
-              {loading && <p>Loading buses...</p>}
-              {error && <p className="error-message">{error}</p>}
-              {filteredBusData.length > 0
-                ? filteredBusData.map((bus) => (
-                    <div key={bus.ride_id} className="bus-card">
-                      <div className="bus-items">
-                        <div className="bus-heading">
-                          <h3>{bus.bus_name}</h3>
-                          <p className="arrival-time">
-                            {new Date(bus.ride_time).toLocaleTimeString()}
-                          </p>
-                        </div>
-                        <div className="bus-info-cnt">
-                          <div className="bus-info-icons">
-                            <ul>
-                              {Object.entries(bus.bus_features).map(
-                                ([feature, value]) =>
-                                  value && (
-                                    <li key={feature}>
-                                      {renderAmenityIcon(feature)}
-                                    </li>
-                                  )
-                              )}
-                            </ul>
-                          </div>
-                          <div>{bus.shift}</div>
-                          <p className="bus-shift">
-                            Shift: {bus.shift}{" "}
-                            <span>
-                              <FiSun />
-                            </span>{" "}
-                          </p>
-                          <div className="Price-tag">
-                            <button
-                              className="view-seats-btn"
-                              onClick={() => handleViewSeats(bus.ride_id)}
-                            >
-                              {showSeats === bus.ride_id
-                                ? "Hide Seats"
-                                : "View Seats"}
-                            </button>
-                            <h4>
-                              Rs.{bus.price} <span>per seat</span>
-                            </h4>
-                          </div>
-                        </div>
+            <div className="bus-list">
+              {filteredBusData.map((bus) => (
+                <div key={bus.ride_id} className="bus-card">
+                  <div className="bus-header">
+                    <h3>{bus.bus_name}</h3>
+                    <span className="departure-time">
+                      {new Date(bus.ride_time).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                  <div className="bus-details">
+                    <div className="features-shift">
+                      <div className="bus-features">
+                        {Object.entries(bus.bus_features)
+                          .filter(([, value]) => value)
+                          .map(([feature]) => (
+                            <span key={feature} className="feature-tag">
+                              {renderAmenityIcon(feature)}
+                              {feature.replace(/([A-Z])/g, " $1").trim()}
+                            </span>
+                          ))}
                       </div>
-                      {showSeats === bus.ride_id && (
-                        <div className="seats-container">
-                          <h4>Seats Available:</h4>
-                          <div className="seats-grid">
-                            {bus.seats.slice(0, 8).map((seat) => (
-                              <div
-                                key={seat.seat_number}
-                                className={`seat ${
-                                  seat.is_available
-                                    ? "available"
-                                    : "unavailable"
-                                }`}
-                              >
-                                {seat.seat_number}
-                              </div>
-                            ))}
-                          </div>
-                          <button onClick={handleContinue}>continue</button>
-                        </div>
-                      )}
+                      <div className="bus-shift">
+                        <FiSun className="shift-icon" />
+                        {bus.shift.charAt(0) + bus.shift.slice(1).toLowerCase()}
+                      </div>
                     </div>
-                  ))
-                : !loading && <p>No buses available for the selected route.</p>}
+                    <div className="price-action">
+                      <span className="price">
+                        ₹{bus.price} <small>/seat</small>
+                      </span>
+                      <button
+                        className="view-seats-btn"
+                        onClick={() => handleViewSeats(bus.ride_id)}
+                      >
+                        {showSeats === bus.ride_id
+                          ? "Hide Seats"
+                          : "View Seats"}
+                      </button>
+                    </div>
+                  </div>
+                  {showSeats === bus.ride_id && (
+                    <div className="seat-selection">
+                      {renderBusLayout(bus.seats, bus.ride_id)}
+                      <div className="selection-summary">
+                        <p>
+                          Selected Seats:{" "}
+                          <strong>
+                            {selectedSeats[bus.ride_id]
+                              ? Array.from(selectedSeats[bus.ride_id]).join(
+                                  ", "
+                                )
+                              : "None"}
+                          </strong>
+                        </p>
+                        <p>
+                          Total Price:{" "}
+                          <strong>
+                            ₹
+                            {selectedSeats[bus.ride_id]
+                              ? Array.from(selectedSeats[bus.ride_id]).length *
+                                bus.price
+                              : 0}
+                          </strong>
+                        </p>
+                        <button
+                          className="book-btn"
+                          onClick={() => handleContinue(bus.ride_id, bus)}
+                          disabled={
+                            !selectedSeats[bus.ride_id] ||
+                            selectedSeats[bus.ride_id].size === 0
+                          }
+                        >
+                          Book Now
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
